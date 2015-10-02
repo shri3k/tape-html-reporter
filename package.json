@@ -1,0 +1,19 @@
+{
+  "name": "tape-html-reporter",
+  "version": "1.0.0",
+  "description": "tape stdout to html for people who don't understand terminal",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape"
+  },
+  "keywords": [
+    "tape",
+    "html",
+    "reporter"
+  ],
+  "author": "Yojan Shrestha",
+  "license": "MIT",
+  "dependencies": {
+    "through2": "^2.0.0"
+  }
+}
