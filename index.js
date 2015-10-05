@@ -27,7 +27,7 @@ var document = {
         tag: '<span>'
       },
       extra: {
-        tag: '<div>'
+        tag: '<div>',
         props: {
           operator: {
             tag: '<span>'
@@ -40,7 +40,6 @@ var document = {
           }
         }
       }
-
     }
   }
 };
@@ -50,9 +49,46 @@ var document = {
  * @return {String} Formatted html string
  */
 
-function format(data) {
+var stack = [];
 
+function saveStack(arr) {
+  stack.push(arr);
 }
+
+function getChunkVal(obj, hie) {
+  hie.split('.').reduce(function(prop, key) {
+    return obj[key];
+  }, obj)
+  return
+}
+
+function format(obj) {
+  var result = '';
+  recurse(obj);
+  stacks.forEach(function(stack) {
+    result += stack.split('.').reduce(function(obj, key, i, arr) {
+      return obj[key].props || (obj[key].tag + getChunkVal(obj, arr) + obj[key].tag.replace('<', '</'));
+    }, document);
+  });
+  stack = [];
+	return result;
+}
+
+function recurse(obj, key) {
+  'use strict';
+  key = key || '';
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k)) {
+      if (isObject(obj[k])) {
+        var dot = key ? '.' : '';
+        var stack = key + dot + k;
+        saveStack(stack);
+        recurse(obj[k], stack);
+      }
+    }
+  }
+}
+
 module.exports = through.obj(function(chunk, err, cb) {
   try {
     var obj = JSON.parse(chunk);
@@ -63,4 +99,3 @@ module.exports = through.obj(function(chunk, err, cb) {
     cb();
   }
 });
-
