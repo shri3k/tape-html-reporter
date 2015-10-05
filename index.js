@@ -55,11 +55,21 @@ function saveStack(arr) {
   stack.push(arr);
 }
 
+function getChunks(obj) {
+  var result = '';
+  for (var k in obj) {
+    result += k + ' ' + obj[k];
+  }
+  return result;
+}
+
 function getChunkVal(obj, hie) {
-  hie.split('.').reduce(function(prop, key) {
-    return obj[key];
+	var result; 
+  result = hie.split('.').reduce(function(prop, key, index, arr) {
+    var end = index + 1 === arr.length ? true : false;
+    return end ? getChunks(obj[key]) : obj[key];
   }, obj)
-  return
+  return result;
 }
 
 function format(obj) {
@@ -71,7 +81,7 @@ function format(obj) {
     }, document);
   });
   stack = [];
-	return result;
+  return result;
 }
 
 function recurse(obj, key) {
